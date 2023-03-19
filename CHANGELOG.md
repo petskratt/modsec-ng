@@ -5,9 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
  
-## [0.0.1] - 2023-03-18
+## [0.0.2] - 2023-03-19
   
 * Forked from [arturluik/modsec-for-bts](https://github.com/arturluik/modsec-for-bts).
+ 
+### Added
+- Add supervisord + [supervisor_stdout-plugin](https://github.com/coderanger/supervisor-stdout). Application configuration can be placesd in `/etc/supervisor/conf.d/*.conf`
+- [WIP] Add script to sync CRS rules from `repos` with the master branch. TO-DO: Set env var to enable/disable this feature and configure cronjobb to run every 'x' minutes.
+
+### Changed
+- Replaced default entrypoint, now supervisord is the default entrypoint.
+- php-fpm and nginx are now managed by supervisord
+
+### Fixed
+
+## [0.0.1] - 2023-03-18
+  
+- Forked from [arturluik/modsec-for-bts](https://github.com/arturluik/modsec-for-bts).
  
 ### Added
  

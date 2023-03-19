@@ -1,10 +1,16 @@
 FROM owasp/modsecurity-crs:nginx-alpine
 
-RUN apk add -U php8-fpm
+RUN apk add -U --no-cache git php8-fpm py3-pip supervisor &&\
+  pip install 'git+https://github.com/coderanger/supervisor-stdout.git'
 
-COPY etc/nginx/ /etc/nginx/
-COPY etc/modsecurity.d/ /etc/modsecurity.d/
+
+
+COPY etc/ /etc/
 COPY html/ /usr/share/nginx/html/
-COPY docker-entrypoint.d/ /docker-entrypoint.d/
+
+COPY sync-crs-rules.sh /sync-crs-rules.sh
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 
 RUN cp /etc/nginx/templates/conf.d/modsecurity.conf.template /etc/nginx/conf.d/modsecurity.conf
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
