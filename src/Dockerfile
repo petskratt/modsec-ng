@@ -3,8 +3,6 @@ FROM owasp/modsecurity-crs:nginx-alpine
 RUN apk add -U --no-cache git php8-fpm py3-pip supervisor &&\
   pip install 'git+https://github.com/coderanger/supervisor-stdout.git'
 
-
-
 COPY etc/ /etc/
 COPY html/ /usr/share/nginx/html/
 

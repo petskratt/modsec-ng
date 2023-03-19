@@ -4,7 +4,18 @@ All notable changes to this project will be documented in this file.
  
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
+
+## [0.0.3] - 2023-03-20
  
+### Added
+- Add feature to sync CRS rules from github repo containing a `rules` folder
+  - Set env var `CRS_RULES_SYNC` to `true` to enable this feature. Check README.md for more information.
+  - The script will run every 5 minutes.
+
+### Changed
+ - The custom error page file has been rename to `html/403_error.php` and a new CSS style has been added.
+
+
 ## [0.0.2] - 2023-03-19
   
 * Forked from [arturluik/modsec-for-bts](https://github.com/arturluik/modsec-for-bts).
@@ -16,8 +27,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Replaced default entrypoint, now supervisord is the default entrypoint.
 - php-fpm and nginx are now managed by supervisord
-
-### Fixed
 
 ## [0.0.1] - 2023-03-18
   
@@ -35,5 +44,3 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Add a `src` folder with structured files
 - Converted the `nginx.conf` as template
 - The `docker-compose.yaml` now mount the rules files in the container
-
-### Fixed
