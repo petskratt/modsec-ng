@@ -20,10 +20,10 @@ server {
     add_header X-Request-ID $request_id;
     ignore_invalid_headers off;
 
-    error_page 403 =418 /unexpected_403.php;
-    error_page 500 502 503 504 /unexpected_403.php;
+    error_page 403 =418 /403_error.php;
+    error_page 500 502 503 504 /403_error.php;
 
-    location /unexpected_403.php {
+    location /403_error.php {
         fastcgi_pass  127.0.0.1:9000;
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME /usr/share/nginx/html$fastcgi_script_name;
@@ -92,10 +92,10 @@ server {
     add_header X-Request-ID $request_id; # Return to client
     ignore_invalid_headers off;
 
-    error_page 403 =418 /unexpected_403.php;
-    error_page 500 502 503 504 /unexpected_403.php;
+    error_page 403 =418 /403_error.php;
+    error_page 500 502 503 504 /403_error.php;
 
-    location /unexpected_403.php {
+    location /403_error.php {
         fastcgi_pass      127.0.0.1:9000;
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME /usr/share/nginx/html$fastcgi_script_name;

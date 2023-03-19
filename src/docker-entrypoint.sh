@@ -1,13 +1,18 @@
 #!/bin/sh
-# vim:sw=4:ts=4:et
-
-set -e
 
 entrypoint_log() {
     if [ -z "${NGINX_ENTRYPOINT_QUIET_LOGS:-}" ]; then
         echo "$@"
     fi
 }
+
+# Check if the the CRS_RULES_SYNC env var is set to true and add a crontab entry to execute the sync script every 5 minutes.
+if [ "$CRS_RULES_SYNC" = true ]; then
+    entrypoint_log "$0: CRS Rules sync is enabled. Adding crontab entry to execute every 5 minutes"
+    echo "*/5 * * * * /sync-crs-rules.sh ${CRS_RULES_REPO} ${CRS_RULES_BRANCH} 2>&1" >> /etc/crontabs/root
+else
+    entrypoint_log "$0: CRS rules sync is disabled"
+fi
 
 # Process all docker-entrypoint.d scripts
 if /usr/bin/find "/docker-entrypoint.d/" -mindepth 1 -maxdepth 1 -type f -print -quit 2>/dev/null | read v; then
@@ -45,6 +50,3 @@ fi
 
 # Start supervisord
 supervisord -c /etc/supervisord.conf
-echo "Bye!"
-# Re-evaluate: Do we really need exec additional commands after supervisor?
-exec "$@"
