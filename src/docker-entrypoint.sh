@@ -9,7 +9,7 @@ entrypoint_log() {
 # Check if the the CRS_RULES_SYNC env var is set to true and add a crontab entry to execute the sync script every minute.
 if [ "$CRS_RULES_SYNC" = true ]; then
     entrypoint_log "$0: CRS Rules sync is enabled. Adding crontab entry to execute every minute"
-    echo "* * * * * /sync-crs-rules.sh ${CRS_RULES_REPO} ${CRS_RULES_BRANCH} 2>&1" >> /etc/crontabs/root
+    echo "* * * * * /sync-crs-rules.sh ${HOSTNAME} ${CRS_RULES_SERVER} 2>&1" >> /etc/crontabs/root
 else
     entrypoint_log "$0: CRS rules sync is disabled"
 fi

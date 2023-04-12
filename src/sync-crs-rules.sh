@@ -1,40 +1,65 @@
 #!/usr/bin/env sh
 
-if [ -z "$1" ]; then
-    log "Usage: $0 <repo>"
-    exit 1
-fi
-# If no branch is specified, use main
-if [ -z "$2" ]; then
-    BRANCH="main"
-else
-    BRANCH=$2
-fi
-
 log() {
     DATE=$(date +"%Y-%m-%d %H:%M:%S")
     echo "[$DATE] [crs-sync] $@"
 }
 
+if [ -z "$1" ]; then
+    log "Usage: $0 <hostname> <server>"
+    exit 1
+fi
+if [ -z "$2" ]; then
+    log "Usage: $0 <hostname> <server>"
+    exit 1
+fi
+
+
+HOSTNAME="$1"
+CRS_RULES_SERVER="$2"
+
+copy_when_needed() {
+    source_hash=`md5sum $1 | awk '{ print $1 }'`
+    destination_hash=`md5sum $2 | awk '{ print $1 }'`
+#    log "Source_hash: $source_hash"
+#    log "Destination_hash $destination_hash"
+
+    if [ "$source_hash" != "$destination_hash" ]; then
+        cp $1 $2
+
+        return 1
+    fi
+
+    return 0
+}
+
 REPO=$1
 
-log "Starting CRS rules syncing from ${1} on branch ${2}"
+log "Starting CRS rules syncing from $2 for $1"
 
 RULES_BEFORE="REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf"
 RULES_AFTER="RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf"
 
 DST_DIR="/opt/owasp-crs/rules"
-BASE_URL="https://raw.githubusercontent.com"
+BASE_URL="$CRS_RULES_SERVER"
 
 # Download rule files
-curl -s -o $DST_DIR/$RULES_BEFORE $BASE_URL/$REPO/$BRANCH/src/rules/$RULES_BEFORE
-curl -s -o $DST_DIR/$RULES_AFTER $BASE_URL/$REPO/$BRANCH/src/rules/$RULES_AFTER
+curl -s -o /tmp/request.conf "$BASE_URL/request?hostname=$HOSTNAME"
+curl -s -o /tmp/response.conf "$BASE_URL/response?hostname=$HOSTNAME"
 
-# test nginx config and reload
-nginx -t && nginx -s reload
-if [ $? -eq 0 ]; then
-    log "CRS rules synced successfully from ${1} on branch ${2}"
-else
-    log "CRS rules sync failed"
-    exit 1
+copy_when_needed "/tmp/request.conf" "$DST_DIR/$RULES_BEFORE"; r1=$?
+copy_when_needed "/tmp/response.conf" "$DST_DIR/$RULES_AFTER"; r2=$?
+
+restart=$r1 || $r2
+
+if [ $restart -eq 1 ]; then
+    # test nginx config and reload
+    nginx -t && nginx -s reload
+    if [ $? -eq 0 ]; then
+        log "CRS rules synced successfully from ${1} on branch ${2}"
+    else
+        log "CRS rules sync failed"
+        exit 1
+    fi
 fi
+
