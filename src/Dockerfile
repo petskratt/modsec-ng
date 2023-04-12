@@ -8,6 +8,9 @@ COPY html/ /usr/share/nginx/html/
 
 COPY sync-crs-rules.sh /sync-crs-rules.sh
 COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf /opt/owasp-crs/rules
+COPY rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf /opt/owasp-crs/rules
+
 
 RUN cp /etc/nginx/templates/conf.d/modsecurity.conf.template /etc/nginx/conf.d/modsecurity.conf
 
