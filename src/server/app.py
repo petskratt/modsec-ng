@@ -40,5 +40,12 @@ def response_handler():
 
     return default + "\n" + additions
 
+@app.route('/report_error')
+def report_handler():
+    hostname = request.args.get("hostname")
+    print("Invalid report for ", hostname, request.data)
+
+    return "OK"
+
 if __name__ == "__main__":
-    app.run()
+    app.run() 

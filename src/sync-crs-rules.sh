@@ -66,6 +66,7 @@ if [ $restart -eq 1 ]; then
     if [ $? -eq 0 ]; then
         log "CRS rules synced successfully from ${1} on branch ${2}"
     else
+        curl -s -o /dev/null "$BASE_URL/report_error?hostname=$HOSTNAME" --data "$(nginx -t)"
         log "CRS rules sync failed"
         exit 1
     fi
