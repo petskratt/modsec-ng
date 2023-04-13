@@ -65,8 +65,9 @@ The script `/sync-crs-rules.sh` will sync the CRS rules from a github repo.
 
 | Name | Description|
 |-|-|
-| `CRS_RULES_SYNC` | enable/disable the sync of the CRS rules from a github repo|
-| `CRS_RULES_REPO` | github repo name to sync the CRS rules from. Ex.: `MrKoopaKiller/modsec-for-bts`|
+| `HOSTNAME` | Hostname that will be used to query CRS_RULES_SERVER |
+| `CRS_RULES_SYNC` | enable/disable the sync of the CRS rules from a github repo |
+| `CRS_RULES_SERVER` | server that serves the modesec rules (example server given in src/server |
 | `CRS_RULES_BRANCH` | branch name to sync the CRS rules from. default: `main`|
 
 The CRS file are in `rules` directory and mounted in the container at `/opt/owasp-crs/rules` by `docker-compose`
