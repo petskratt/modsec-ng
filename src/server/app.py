@@ -25,7 +25,6 @@ request_file = "REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf"
 response_file = "RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf"
 
 def get_rule_content(hostname, file):
-    print("Requesting rules for hostname ", hostname, file)
     safe_dir = "/rules/"
     request_path = safe_dir + hostname
     if os.path.commonprefix((os.path.realpath(request_path),safe_dir)) != safe_dir: 
