@@ -24,24 +24,35 @@ Check the [Supervisord](#supervisord) section for more information.
 **`src` directory structure:**
 
 ```
-src
-├── docker-entrypoint.sh
 ├── Dockerfile
+├── docker-entrypoint.sh
 ├── etc
-│  ├── modsecurity.d
-│  │  └── modsecurity-override.conf
-│  ├── nginx
-│  │  └── templates
-│  │     ├── conf.d
-│  │     │  └── default.conf.template
-│  │     └── nginx.conf.template
-│  ├── supervisor.d
-│  │  ├── start_crond.conf
-│  │  ├── start_php-fpm.conf
-│  │  └── start_php-fpm.conf
-│  └── supervisord.conf
+│   ├── modsecurity.d
+│   │   └── modsecurity-override.conf
+│   ├── nginx
+│   │   └── templates
+│   │       ├── conf.d
+│   │       │   └── default.conf.template
+│   │       └── nginx.conf.template
+│   ├── supervisor.d
+│   │   ├── start_crond.conf
+│   │   ├── start_nginx.conf
+│   │   └── start_php-fpm.conf
+│   └── supervisord.conf
 ├── html
-│  └── 403_error.php
+│   └── 403_error.php
+├── server
+│   ├── Dockerfile
+│   ├── app.py
+│   ├── docker-compose.yml
+│   ├── requirements.txt
+│   └── rules
+│       ├── default
+│       │   ├── REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
+│       │   └── RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf
+│       └── template
+│           ├── REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
+│           └── RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf
 └── sync-crs-rules.sh
 
 ```
@@ -61,7 +72,7 @@ src
 
 ## CRS Rules Sync
 
-The script `/sync-crs-rules.sh` will sync the CRS rules from a github repo.
+The script `/sync-crs-rules.sh` will sync the CRS rules from a CRS_RULES_SERVER.
 
 | Name | Description|
 |-|-|
