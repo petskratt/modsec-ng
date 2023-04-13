@@ -61,7 +61,7 @@ def response_handler():
 @app.route('/report_error', methods = ['POST'])
 def report_handler():
     hostname = request.args.get("hostname")
-    app.logger.info('Invalid report for ' + hostname + " Data: " + str(request.data))
+    app.logger.info('Invalid report for ' + hostname + " Data: " + str(request.stream.read()))
 
     return "OK"
 
