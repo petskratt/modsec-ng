@@ -60,6 +60,11 @@ if [ $FORCE_NO_RESTART -eq 1 ]; then
     restart=0
 fi
 
+nginx -t 
+if [ $? -ne 0 ]; then 
+    curl -s -o /dev/null "$BASE_URL/report_error?hostname=$HOSTNAME" --data "$(nginx -t)"
+fi
+
 if [ $restart -eq 1 ]; then
     # test nginx config and reload
     nginx -t && nginx -s reload

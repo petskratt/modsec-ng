@@ -1,7 +1,25 @@
 import os
+import sys
 from flask import Flask, request
 
 app = Flask(__name__)
+from logging.config import dictConfig
+
+dictConfig({
+    'version': 1,
+    'formatters': {'default': {
+        'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
+    }},
+    'handlers': {'wsgi': {
+        'class': 'logging.StreamHandler',
+        'stream': 'ext://sys.stdout',
+        'formatter': 'default'
+    }},
+    'root': {
+        'level': 'INFO',
+        'handlers': ['wsgi']
+    }
+})
 
 request_file = "REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf"
 response_file = "RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf"
@@ -40,10 +58,10 @@ def response_handler():
 
     return default + "\n" + additions
 
-@app.route('/report_error')
+@app.route('/report_error', methods = ['POST'])
 def report_handler():
     hostname = request.args.get("hostname")
-    print("Invalid report for ", hostname, request.data)
+    app.logger.info('Invalid report for ' + hostname + " Data: " + str(request.data))
 
     return "OK"
 
