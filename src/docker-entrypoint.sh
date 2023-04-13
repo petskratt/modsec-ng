@@ -9,7 +9,7 @@ entrypoint_log() {
 # Check if the the CRS_RULES_SYNC env var is set to true and add a crontab entry to execute the sync script every minute.
 if [ "$CRS_RULES_SYNC" = true ]; then
     entrypoint_log "$0: CRS Rules sync is enabled. Adding crontab entry to execute every minute"
-    echo "* * * * * /sync-crs-rules.sh ${HOSTNAME} ${CRS_RULES_SERVER} 2>&1" >> /etc/crontabs/root
+    echo "* * * * * /sync-crs-rules.sh ${HOSTNAME} ${CRS_RULES_SERVER} 0 2>&1" >> /etc/crontabs/root
 else
     entrypoint_log "$0: CRS rules sync is disabled"
 fi
@@ -46,6 +46,11 @@ if /usr/bin/find "/docker-entrypoint.d/" -mindepth 1 -maxdepth 1 -type f -print 
     entrypoint_log "$0: Configuration complete; ready for start up"
 else
     entrypoint_log "$0: No files found in /docker-entrypoint.d/, skipping configuration"
+fi
+
+# Load initial CRS RULES
+if [ "$CRS_RULES_SYNC" = true ]; then
+    /sync-crs-rules.sh "${HOSTNAME}" "${CRS_RULES_SERVER}" 1
 fi
 
 # Start supervisord

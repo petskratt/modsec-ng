@@ -14,6 +14,7 @@ if [ -z "$2" ]; then
     exit 1
 fi
 
+FORCE_NO_RESTART=$3
 
 HOSTNAME="$1"
 CRS_RULES_SERVER="$2"
@@ -27,9 +28,11 @@ copy_when_needed() {
     if [ "$source_hash" != "$destination_hash" ]; then
         cp $1 $2
 
+        log "$2 requires update"
         return 1
     fi
 
+    log "$2 is up to date"
     return 0
 }
 
@@ -51,6 +54,11 @@ copy_when_needed "/tmp/request.conf" "$DST_DIR/$RULES_BEFORE"; r1=$?
 copy_when_needed "/tmp/response.conf" "$DST_DIR/$RULES_AFTER"; r2=$?
 
 restart=$r1 || $r2
+
+if [ $FORCE_NO_RESTART -eq 1 ]; then
+    log "Forcing no restart flag!"
+    restart=0
+fi
 
 if [ $restart -eq 1 ]; then
     # test nginx config and reload
