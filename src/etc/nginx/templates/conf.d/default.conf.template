@@ -10,6 +10,7 @@ server {
     resolver ${DNS_SERVER} valid=5s;
     server_name ${SERVER_NAME};
     set $upstream ${BACKEND_PORT80};
+    set $always_redirect ${NGINX_ALWAYS_TLS_REDIRECT};
 
     ssl_certificate ${PROXY_SSL_CERT};
     ssl_certificate_key ${PROXY_SSL_CERT_KEY};
@@ -33,6 +34,10 @@ server {
 
     location / {
         client_max_body_size 0;
+
+        if ($always_redirect = on) {
+            return 301 https://$host$request_uri;
+        }
 
         proxy_set_header Host $host;
         proxy_set_header Proxy "";
