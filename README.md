@@ -60,7 +60,6 @@ Check the [Supervisord](#supervisord) section for more information.
 |-|-|
 |`docker-entrypoint.sh` | entrypoint script |
 |`Dockerfile` | dockerfile |
-|`etc/modsecurity.d/modsecurity-override.conf` | modsecurity-override configuration |
 |`etc/nginx/templates/nginx.conf.template` | nginx.conf template file |
 |`etc/nginx/templates/conf.d/default.conf.template` | nginx default.conf template file |
 |`etc/supervisord.conf` | supervisord configuration |
