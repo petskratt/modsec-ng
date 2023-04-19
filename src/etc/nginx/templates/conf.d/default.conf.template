@@ -121,6 +121,7 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
 
         set $csp_head ${CSP};
+        proxy_hide_header Content-Security-Policy;
         add_header Content-Security-Policy $csp_head always;
 
         proxy_http_version 1.1;

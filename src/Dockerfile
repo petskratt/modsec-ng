@@ -13,6 +13,7 @@ COPY server/rules/default/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf /opt/owasp
 COPY server/rules/default/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf /opt/owasp-crs/rules
 
 ENV MODSEC_AUDIT_ENGINE='on'
+ENV MODSEC_AUDIT_LOG_PARTS='ABCIJDEFHZ'
 
 RUN cp /etc/nginx/templates/conf.d/modsecurity.conf.template /etc/nginx/conf.d/modsecurity.conf
 
