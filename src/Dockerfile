@@ -1,4 +1,4 @@
-FROM owasp/modsecurity-crs:nginx-alpine
+FROM owasp/modsecurity-crs:3.3-nginx-alpine-202303150803
 
 RUN apk update
 RUN apk add -U --no-cache git php8-fpm py3-pip supervisor --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/ &&\
