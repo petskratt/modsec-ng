@@ -7,7 +7,8 @@ RUN apk add -U --no-cache git php8-fpm py3-pip supervisor --repository=http://dl
 COPY etc/ /etc/
 COPY html/ /usr/share/nginx/html/
 
-COPY sync-crs-rules.sh /sync-crs-rules.sh
+COPY sync-crs-rules-central-waf.sh /sync-crs-rules.sh
+COPY convert-rules.awk /convert-rules.awk
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 COPY server/rules/default/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf /opt/owasp-crs/rules
 COPY server/rules/default/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf /opt/owasp-crs/rules
