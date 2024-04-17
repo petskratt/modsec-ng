@@ -9,7 +9,7 @@ services:
       proxy: {}
 
   ipv6:
-    image: robbertkl/ipv6nat
+    image: ls24.wayren.ee:5000/ipv6nat
     restart: unless-stopped
     network_mode: "host"
     privileged: true
