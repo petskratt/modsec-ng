@@ -29,7 +29,7 @@ services:
       #### COMMON ENV VARS
       - HOSTNAME=localhost
       - CRS_RULES_SYNC=true
-      - CRS_RULES_SERVER=http://ls23.wayren.ee:8080
+      - CRS_RULES_SERVER=http://ls24.wayren.ee:8080
       - BACKEND_PORT443=http://web:8080
       - BACKEND_PORT80=http://web:8080
       - DNS_SERVER=127.0.0.11
