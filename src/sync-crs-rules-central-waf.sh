@@ -90,7 +90,7 @@ restart=$r1
 
 response=`nginx -t 2>&1`
 if [ $? -ne 0 ]; then 
-    curl -s -o /dev/null "$BASE_URL/report_error?hostname=$HOSTNAME" --data "$response"
+    curl -s -o /dev/null "$BASE_URL/report_error?hostname=central_waf" --data "$response"
 fi
 
 if [ $restart -eq 1 ]; then
