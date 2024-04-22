@@ -6,7 +6,7 @@ services:
     depends_on:
       - modsec
     networks:
-      proxy: {}
+      internal: {}
 
   ipv6:
     image: ls24.wayren.ee:5000/ipv6nat
@@ -20,8 +20,8 @@ services:
   modsec:
     build: ./src
     ports:
-      - "80:80"
-      - "443:443"
+      - "80:8080"
+      - "443:8443"
     networks:
       - internal
       - proxy
