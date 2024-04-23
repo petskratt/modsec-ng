@@ -3,6 +3,7 @@ version: "2.4"
 services:
   web:
     image: nginxdemos/nginx-hello
+    restart: unless-stopped
     depends_on:
       - modsec
     networks:
@@ -19,6 +20,7 @@ services:
 
   modsec:
     build: ./src
+    restart: unless-stopped
     ports:
       - "4444:8080"
     networks:
