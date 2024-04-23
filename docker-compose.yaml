@@ -20,8 +20,7 @@ services:
   modsec:
     build: ./src
     ports:
-      - "80:8080"
-      - "443:8443"
+      - "4444:8080"
     networks:
       - internal
       - proxy
@@ -74,4 +73,6 @@ networks:
       config:
         - subnet: fd00:dead:beef::/48
   proxy:
-    external: true
+  #tests
+    external: false
+    name: dummy_network
