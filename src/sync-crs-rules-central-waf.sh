@@ -37,7 +37,7 @@ rewrite_rules() {
           rr="${r##*/}"
           #echo $r
           #echo $rr
-          sed ':x; /\\$/ { N; s/\\\n//; tx }' $r |   awk -f /convert-rules.awk  -v i=$idx -v h=$h > $RDSTDIR/${h}_${rr}
+          sed ':x; /\\$/ { N; s/\\\n//; tx }' $r | sed 's/^[[:space:]]*//' |  awk -f convert-rules.awk  -v i=$idx -v h=$h > $RDSTDIR/${h}_${rr}
           n=$(wc -l $RDSTDIR/${h}_${rr} | cut -d " " -f 1)
           #echo $n
           idx=$((idx + n))
