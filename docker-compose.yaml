@@ -1,77 +1,47 @@
-version: "2.4"
-
+name: modsec
 services:
   web:
+    container_name: web
     image: nginxdemos/nginx-hello
     depends_on:
       - modsec
     networks:
-      internal: {}
-
-  ipv6:
-    image: ls24.wayren.ee:5000/ipv6nat
-    restart: unless-stopped
-    network_mode: "host"
-    privileged: true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /lib/modules:/lib/modules:ro
+      - isolated
+      - public
+    ports:
+      - "8181:8080"
 
   modsec:
-    build: ./src
+    container_name: modsec
+    build:
+      context: ./src
+      args:
+        MODSECURITY_TAG: 4.6.0-nginx-alpine-202409130109
+    env_file: modsec.env
     ports:
       - "80:8080"
       - "443:8443"
     networks:
-      - internal
-      - proxy
-    environment:
-      #### COMMON ENV VARS
-      - HOSTNAME=localhost
-      - CRS_RULES_SYNC=true
-      - CRS_RULES_SERVER=http://ls24.wayren.ee:8080
-      - BACKEND_PORT443=http://web:8080
-      - BACKEND_PORT80=http://web:8080
-      - DNS_SERVER=127.0.0.11
-      # - DNS_SERVER=192.168.3.1
-      # - ERRORLOG=/var/log/nginx/error.log # default
-      # - LOGLEVEL=warn #default
-      # - PORT=80 # default
-      # - SSL_PORT=443 # default
-      #### NGINX ENV VARS
-      # - SERVER_NAME=localhost # default
-      # - USER=nginx # default
-      # - WORKER_CONNECTIONS=1024 # default
-      #### CRS ENV VARS
-      # - ANOMALY_INBOUND=5 #default
-      # - ANOMALY_OUTBOUND=4 # default
-      # - BLOCKING_PARANOIA=1 # default
-      - CSP="default-src 'self' custom.domain.ee"
-      # - PARANOIA=1 # default
-      #### MODSEC ENV VARS
-      # - MODSEC_PCRE_MATCH_LIMIT_RECURSION=100000 # default
-      # - MODSEC_PCRE_MATCH_LIMIT=100000 #default
-      # - MODSEC_REQ_BODY_ACCESS=on # default
-      - MODSEC_REQ_BODY_LIMIT=200000000
-      # - MODSEC_REQ_BODY_NOFILES_LIMIT=131072 #default
-      # - MODSEC_RESP_BODY_ACCESS=on #default
-      # - MODSEC_RESP_BODY_LIMIT=1048576 # default
-      # - MODSEC_RULE_ENGINE=on # default
-      # - SSL_CERT=/keys/cert.pem
-      # - SSL_CERT_KEY=/keys/privkey.pem 
-      # volumes:
-      # - ./rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf:/opt/owasp-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
-      # - ./rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf:/opt/owasp-crs/rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf
-      #   - ./x.org/cert.pem:/keys/cert.pem
-      #   - ./x.org/privkey.pem:/keys/privkey.pem
+      - isolated
+      - public
+
+  errorhandler:
+    container_name: errorhandler
+    image: php:8-fpm
+    restart: always
+    volumes:
+      - ./src/html:/usr/share/nginx/html
+      - ./conf/app-php.ini:/usr/local/etc/php/conf.d/app-php.ini
+    ports:
+      - 9000:9000
+    depends_on:
+      - modsec
+    networks:
+      - isolated
 
 networks:
-  internal:
-    enable_ipv6: true
+  isolated:
     driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: fd00:dead:beef::/48
-  proxy:
-    external: true
+    internal: true
+  public:
+    driver: bridge

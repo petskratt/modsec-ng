@@ -1,0 +1,41 @@
+
+location /healthz {
+    access_log off;
+    add_header Content-Type text/plain;
+    return 200 "OK";
+}
+
+location /metrics/nginx {
+    access_log off;
+    allow ${METRICS_ALLOW_FROM};
+    deny ${METRICS_DENY_FROM};
+    proxy_store off;
+    stub_status;
+}
+
+# EEBT - define custom error pages
+error_page 403 =418 /403_error.html;
+#error_page 500 502 503 504 /50x_error.php;
+
+# EEBT - serve custom error pages with PHP
+
+location /403_error.html {
+	sub_filter '{request_id}'  $request_id;
+	sub_filter_once off;
+	root /usr/share/nginx/html;
+}
+
+location /403_error.php {
+# location ~ \.php$ {
+    try_files $uri =404;
+    proxy_hide_header Content-Security-Policy;
+    add_header Content-Security-Policy "default-src 'none'; object-src 'none'; base-uri 'none'; style-src 'unsafe-inline'; font-src https://fonts.googleapis.com/; frame-ancestors 'self'; form-action 'self'" always;
+    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+    fastcgi_pass errorhandler:9000;
+    fastcgi_param SCRIPT_FILENAME /usr/share/nginx/html$fastcgi_script_name;
+    fastcgi_param PATH_INFO $fastcgi_path_info;
+    fastcgi_param REQUEST_ID $request_id;
+    fastcgi_index index.php;
+    include fastcgi_params;
+    root /usr/share/nginx/html;
+}

@@ -1,9 +1,0 @@
-version: "2.4"
-
-services:
-  modsec-server:
-    build: .
-    ports:
-      - "8080:5000"
-    volumes:
-      - ./rules:/rules
