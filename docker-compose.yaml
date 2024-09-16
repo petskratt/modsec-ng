@@ -13,10 +13,11 @@ services:
 
   modsec:
     container_name: modsec
+#    image: owasp/modsecurity-crs:${MODSECURITY_TAG}
     build:
       context: ./src
       args:
-        MODSECURITY_TAG: 4.6.0-nginx-alpine-202409130109
+        MODSECURITY_TAG: ${MODSECURITY_TAG}
     env_file: modsec.env
     ports:
       - "80:8080"
@@ -25,19 +26,6 @@ services:
       - isolated
       - public
 
-  errorhandler:
-    container_name: errorhandler
-    image: php:8-fpm
-    restart: always
-    volumes:
-      - ./src/html:/usr/share/nginx/html
-      - ./conf/app-php.ini:/usr/local/etc/php/conf.d/app-php.ini
-    ports:
-      - 9000:9000
-    depends_on:
-      - modsec
-    networks:
-      - isolated
 
 networks:
   isolated:
