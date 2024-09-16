@@ -2,8 +2,27 @@
 # Change Log
 All notable changes to this project will be documented in this file.
  
-The format is based on [Keep a Changelog](http://keepachangelog.com/)
-and this project adheres to [Semantic Versioning](http://semver.org/).
+The format is based on [Keep a Changelog](https://keepachangelog.com/)
+and this project adheres to [Semantic Versioning](https://semver.org/).
+
+## [bsides-0.0.4] - 2024-09-16
+
+This is a major simplification for BSides Tallinn 2024 workshop, lives in dedicated branch.
+
+### Changed
+
+- move nginx, modsec options to modsec.env
+- move nginx conf to (minimal amount of) templates
+- move php-fpm to separate container (418 errorpage)
+
+### Removed
+
+- rule update client+server, supervisord 
+- LS specific content (site rules)
+
+### Security
+
+- better sample CSP (base-uri, frame-ancestors, form-action etc)
 
 ## [0.0.3] - 2023-03-20
  
