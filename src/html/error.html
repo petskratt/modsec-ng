@@ -2,12 +2,10 @@
 <html lang="en">
 
 <head>
-    <title>[Error 403] Unexpected action detected!</title>
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400&display=swap" rel="stylesheet">
+    <title>[ Error {status} ]</title>
     <style>
         * {
-            font-family: 'Oxanium', cursive;
+            font-family: monospace;
             box-sizing: border-box;
         }
 
@@ -33,39 +31,28 @@
             color: #2196f3;
         }
 
-        #app .txt {
+        #app .message {
             font-size: 50px;
-            line-height: 1.5;
             color: #333;
         }
 
-        #app .txt span {
+        #app .cta {
             font-size: 1.8rem;
+            line-height: 1.5;
             color: #666;
         }
 
-        #app .txt strong {
-            font-family: 'Courier New', Courier, monospace;
-        }
-
-        @keyframes blink {
-            50% {
-                border-color: transparent;
-            }
-        }
     </style>
 </head>
 
 <body>
 <div id="app">
-    <div>403</div>
-    <div class="txt">
-        Unexpected action detected!<br>
-        <span>Please contact our help desk with request id:<br>
-        <strong>
-          <?= $_SERVER['REQUEST_ID'] ?>
-        </strong>
-      </span>
+    <div>{status}</div>
+    <div >
+        <p class="message">Unexpected action detected!</p>
+        <p class="cta">Please contact our hj&auml;lp desk with request id:<br>
+        <strong>{request_id}</strong>
+        </p>
     </div>
 </div>
 </body>

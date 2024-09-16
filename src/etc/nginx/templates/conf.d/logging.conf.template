@@ -1,3 +1,5 @@
+# EEBT - custom JSON log format
+
 log_format  json_combined escape=json
                 '{"time_local":"$time_local", '
                 '"host":"$host", '
