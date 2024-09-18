@@ -1,5 +1,14 @@
-name: modsec
+name: bsides-ws
+
+include:
+  # Elastic and Kibana - you will presumably run it somewhere else, but for demo / local play
+  - docker-compose-elastic.yaml
+  # Sumologic - once we are playing with logs let's send them everywhere (what could possibly go wrong)
+  - docker-compose-sumologic.yaml
+  -
 services:
+
+  # Your web app behind WAF
   web:
     container_name: web
     image: nginxdemos/nginx-hello
@@ -8,6 +17,7 @@ services:
     networks:
       - isolated
 
+  # Modsecurity reverse-proxy & WAF
   modsec:
     container_name: modsec
     image: owasp/modsecurity-crs:${MODSECURITY_TAG}
@@ -22,6 +32,26 @@ services:
     ports:
       - "80:8080"
       - "443:8443"
+    logging:
+      driver: fluentd
+    depends_on:
+      - fluentbit
+    networks:
+      - isolated
+      - public
+
+  # this is the Fluent Bit that sends the logs to Elastic
+  fluentbit:
+    image: cr.fluentbit.io/fluent/fluent-bit
+    volumes:
+      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+    #      - ./fluent-bit-parsers.conf:/fluent-bit/etc/fluent-bit-parsers.conf
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    depends_on:
+      es01:
+        condition: service_healthy
     networks:
       - isolated
       - public

@@ -5,20 +5,21 @@ add_header Content-Security-Policy $csp_value always;
 
 # EEBT - define custom error pages
 
-# using named locations, error page not directly accessible
-error_page 403 =418 @error_page;
-error_page 500 502 503 504 @error_page;
-# needed for named locations
-recursive_error_pages on;
+error_page 403 =418 /error.html;
+error_page 500 502 503 504 /error.html;
 
+# WIP - would prefer using named locations... but
+# error_page 403 =418 @error_page;
+# recursive_error_pages on;
 
 # EEBT - serve custom error pages
 
-location @error_page {
+#location @error_page {
+location /error.html {
 	root /usr/share/nginx/html;
 	index error.html;
-    # do not run Modsecurity on recursive_error_pages
-    modsecurity_rules 'SecRuleEngine Off';
+    # do not run Modsecurity on recursive_error_pages - but that disables also auditlog...
+    # modsecurity_rules 'SecRuleEngine Off';
     # customise error page content
 	sub_filter '{request_id}' $request_id;
 	sub_filter '{status}' $status_filtered;
