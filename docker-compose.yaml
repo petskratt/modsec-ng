@@ -11,7 +11,9 @@ services:
   # Your web app behind WAF
   web:
     container_name: web
-    image: nginxdemos/nginx-hello
+#    image: nginxdemos/nginx-hello
+    image: petskratt/burn-after-running
+    restart: always
     depends_on:
       - modsec
     networks:
@@ -21,6 +23,7 @@ services:
   modsec:
     container_name: modsec
     image: owasp/modsecurity-crs:${MODSECURITY_TAG}
+    restart: always
     volumes:
       - ./src/html:/usr/share/nginx/html
       - ./src/etc/nginx/templates/conf.d/eebt.conf.template:/etc/nginx/templates/conf.d/eebt.conf.template
@@ -43,6 +46,7 @@ services:
   # this is the Fluent Bit that sends the logs to Elastic
   fluentbit:
     image: cr.fluentbit.io/fluent/fluent-bit
+    restart: always
     volumes:
       - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
     #      - ./fluent-bit-parsers.conf:/fluent-bit/etc/fluent-bit-parsers.conf

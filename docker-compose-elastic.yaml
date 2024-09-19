@@ -64,6 +64,7 @@ services:
       setup:
         condition: service_healthy
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    restart: always
     labels:
       co.elastic.logs/module: elasticsearch
     volumes:
@@ -88,6 +89,7 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=${LICENSE}
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
     mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
@@ -110,6 +112,7 @@ services:
       es01:
         condition: service_healthy
     image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
+    restart: always
     labels:
       co.elastic.logs/module: kibana
     volumes:
@@ -119,6 +122,9 @@ services:
       - ${KIBANA_PORT}:5601
     environment:
       - SERVERNAME=kibana
+      - SERVER_SSL_ENABLED=true
+      - SERVER_SSL_CERTIFICATE=config/certs/kibana/kibana.crt
+      - SERVER_SSL_KEY=config/certs/kibana/kibana.key
       - ELASTICSEARCH_HOSTS=https://es01:9200
       - ELASTICSEARCH_USERNAME=kibana_system
       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
